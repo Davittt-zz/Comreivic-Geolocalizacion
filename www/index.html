@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Comreivic</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--   <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="docs/examples/sticky-footer-navbar/sticky-footer-navbar.css" rel="stylesheet"> -->
+	 <link href="css/myStyle.css" rel="stylesheet">
+    <script src="docs/assets/js/ie-emulation-modes-warning.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  </head>
+
+  <body class="backgroundImage">
+
+    <!-- Begin page content -->
+    <div class="container">
+        <div class="row">
+			    <div class="col-xs-12 col-md-12">
+				    <img style="float:none; margin:0px auto;" src="images/logo.png" class="img-responsive" />
+		      </div>
+		</div>
+	<br>
+		<div class="row">
+			<div class="col-md-12 col-xs-12">
+				<p class="headingFont text-center">Soluciones múltiples en minería y construcción</p>
+		   </div>
+		</div>
+	<br>
+		<div class="row">
+			<div class="col-md-12 col-xs-12">
+				<img style="float:none; margin:0px auto;" src="images/location.png" class="img-responsive">
+		   </div>
+		</div>
+	<br>
+		<div class="row">
+			<div class="col-md-12 col-xs-12">
+				<p class="subHeading text-center">GEOLOCALIZACION DE VENDEDORES</p>
+		   </div>
+		</div>
+	<br>
+		<!-- Form Start -->
+<div class="row">
+      <div class="col-md-12 col-xs-12">
+<form class="form-horizontal" id="registration" role="form">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 col-xs-offset-2 col-xs-2 col-md-2 control-label headingFont">Nombre y Apellido</label>
+    <div class="col-sm-3 col-xs-6 col-md-3">
+      <input type="text" name="name" class="form-control" id="exampleInputEmail2" placeholder="">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 col-xs-offset-2 col-xs-2 col-md-2 control-label headingFont">Codigo de Verificación</label>
+    <div class="col-sm-3 col-xs-6 col-md-3">
+      <input type="email" name="vcode" class="form-control" id="inputPassword2" placeholder="">
+    </div>
+  </div>
+    <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 col-xs-offset-2 col-xs-2 col-md-2 control-label headingFont">Telefono</label>
+    <div class="col-sm-3 col-xs-6 col-md-3">
+      <input type="text" name="phone" class="form-control" id="inputPassword3" placeholder="">
+    </div>
+  </div>
+</form>
+</div>
+</div>
+		<!-- Form End-->
+		
+		
+		<!-- Conatainer End -->
+    </div>
+
+    <footer class="footer footerImage">
+      <div class="container">
+		   <div class="row">
+			<div class="col-xs-4 col-md-4">
+		   </div>
+		   <div class="col-xs-4 col-md-4">
+			<a href="#_"><img onclick="submitForm()" id="hideImage" src="images/button2.png" class="img-responsive"></a>
+		   </div>
+		   <div class="col-xs-4 col-md-4">
+		   </div>
+		   </div>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="docs/dist/js/bootstrap.min.js"></script> 
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+   <!--  <script src="docs/assets/js/ie10-viewport-bug-workaround.js"></script> -->
+    
+   <script type="text/javascript">
+    
+    submitForm = function()
+    {
+	    var url = "http://comreivic.uc-web.mobi/register_test.php";
+	    $.ajax({
+		   type: "POST",
+		   url: url,
+		   data: $("#registration").serialize(),
+		   success: function(data)
+		   {	    
+				var respnseData = JSON.parse(data);
+				window.localStorage.setItem("id",respnseData.id);
+				$("#hideImage").hide(); 
+				$("#registration").hide();
+				alert("You Have Successfully Registered");
+				setInterval(sendRequest, 18000);
+		   }
+		});
+		
+		return false; // avoid to execute the actual submit of the form.
+    }
+
+      
+	sendRequest = function()
+    {
+    	navigator.geolocation.getCurrentPosition(showPosition);
+    }
+	  
+      
+    showPosition = function(position)
+    {
+		var PostData = { lat : position.coords.latitude , lon : position.coords.longitude, id : localStorage.getItem('id') }
+
+		var url = "http://comreivic.uc-web.mobi/set_position.php"; // the script where you handle the form input.
+
+		$.ajax({
+		   type: "POST",
+		   url: url,
+		   data: PostData,
+		   success: function(data)
+		   {
+				console.log(data);
+		   }
+		});
+		return false;
+    }
+
+    function codeAddress() 
+    {
+	    var stored = localStorage['id'];
+		if (stored)
+		{
+			$("#hideImage").hide(); 
+			$("#registration").hide();
+			setInterval(sendRequest, 18000);
+		}
+    }
+
+    window.onload = codeAddress;
+
+    function closeWin() {
+		window.close(); // Closes the new window
+	}
+      
+    </script>
+	
+  </body>
+</html>
